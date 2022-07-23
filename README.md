@@ -59,5 +59,7 @@ db.Products.insertMany(
     "DatabaseName": "ProductDb",
     "CollectionName": "Products"
   },
-32.  
-
+32.Create a Data Layer by creating Data folder and then create an Interface ICatalogContext and its definition class CatalogContext.cs class. Also create a CatalogContextSeed.cs class
+33.Create a Business Layer in the form of Repositories folder and inject ICatalogContext into ProductRepository class which is implementing IProductRepository
+34.Develop Presentation Layer/API Layer by Creating CatalogController.
+35.Now the API is ready so we need to update the package by running the following command: Update-Package -ProjectName Catalog.API
