@@ -3,8 +3,8 @@
 1.Create a Github Repository. Include, GitIgnore,Readme.md & License
 2.In VS, clone the repository.
 3.Create a sub-folder as src
-4.Create a blank solution in src...aspnetcore-microservices
-5.Add a solution folder in the solution-services.Right click on services and add a new solution folder-Catalog
+4.Add a blank solution in src...aspnetcore-microservices
+5.Add a folder in the solution named as services.Right click on services and add a new solution folder-Catalog
 6.Right click on Catalog and add a new ASP.Net Core Web API project and name it as Catalog.API. Make sure that it is created under Catalog folder.
 7.Right click on Catalog.API and select Properties->Debug and change the Profile from IIS Express to Catalog.API and Launch as Project. You will see App URL as http://localhost:5000
 8.Go to appsettings.json and you will see Catalog.API profile created.
@@ -63,3 +63,87 @@ db.Products.insertMany(
 33.Create a Business Layer in the form of Repositories folder and inject ICatalogContext into ProductRepository class which is implementing IProductRepository
 34.Develop Presentation Layer/API Layer by Creating CatalogController.
 35.Now the API is ready so we need to update the package by running the following command: Update-Package -ProjectName Catalog.API
+
+36.Containerize Catalog Microservices with MongoDb
+    a.Right click on Catalog.API and select Add->Container Orchestrator Support->Docker Compose->Linux
+    b.It will result in creation of dockerfile and docker-compose
+    c.Update dockerfile, docker-compose.yml and docker-compose.override.yml for catalogapi,catalogdb
+    1.  dockerfile:
+    #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["services/Catalog/Catalog.API/Catalog.API.csproj", "services/Catalog/Catalog.API/"]
+RUN dotnet restore "services/Catalog/Catalog.API/Catalog.API.csproj"
+COPY . .
+WORKDIR "/src/services/Catalog/Catalog.API"
+RUN dotnet build "Catalog.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Catalog.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Catalog.API.dll"]
+
+    2.  docker-compose.override.yml
+
+version: '3.4'
+
+services:
+  catalogdb:
+    container_name: catalogdb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  catalog.api:
+    container_name: catalog.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
+    depends_on:
+      - catalogdb
+    ports:
+      - "8000:80"
+
+      3.    docker-compose.yml
+
+version: '3.4'
+
+services:
+  catalogdb:
+    image: mongo
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: services/Catalog/Catalog.API/Dockerfile
+
+volumes:
+  mongo_data:
+
+    d.  Right click on docker-compose project and Open in terminal
+    e.  docker ps.....Check for the running container and if a container is running on 27017 port , then type: docker stop {containerid first 4 letters}
+    f.  docker ps..to verify if no other container is running on that port
+    g.  Remove the container...docker rm cced....before removing..docker ps -a..to check for active conatiner and then docker stop cced and lastly docker rm cced
+    h.  docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
+    i.  After this check if both the containers are activated for mongo and API
+    j.  Go to http://localhost:8000/swagger/index.html and check if the docker image of api is running fine
+    k.  Setting for docker....Open Tools->Options->Search Docker->Docker Compose and set options there as False, Never, True, False
+    l.  To stop and remove all containerized images - docker-compose -f docker-compose.yml -f docker-compose.override.yml up
+
+Service 2: Basket.API
+1.  Right click services and add a new folder named Basket
+2.  Right click Basket and add a new ASP.Net Core Web API project and name it as Basket.API
+
+
+
