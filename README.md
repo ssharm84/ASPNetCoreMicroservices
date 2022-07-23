@@ -1,7 +1,7 @@
 # ASPNetCoreMicroservices
 https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f
 
-https://user-images.githubusercontent.com/67266176/180625466-58a5a8ee-e125-4197-8ff2-6ff1501fd9c2.png
+image.png
 
 1.  Create a Github Repository. Include, GitIgnore,Readme.md & License
 2.  In VS, clone the repository.
