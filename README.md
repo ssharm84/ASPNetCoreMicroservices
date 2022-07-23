@@ -1,4 +1,5 @@
 # ASPNetCoreMicroservices
+https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f
 
 1.Create a Github Repository. Include, GitIgnore,Readme.md & License
 2.In VS, clone the repository.
@@ -144,6 +145,31 @@ volumes:
 Service 2: Basket.API
 1.  Right click services and add a new folder named Basket
 2.  Right click Basket and add a new ASP.Net Core Web API project and name it as Basket.API
+3.  Right click on Basket.API and select Properties->Debug and change the Profile from IIS Express to Basket.API and Launch as Project.Also, change port number to 5001
+4.  Right click on project and Set as Startup Project.
+5.  Now we need to have our data source as Redis which is:
+    a.  Open-source NoSQL Database
+    b.  Remote dictionary server, key-value pairs, Data Structure server, Extremely fast
+6.  Right click on docker-compose and open terminal and type the following command to pull redis image from docker hub: docker pull redis
+7.  Before Point 6, run this command - docker login --username=ss84
+8.  docker images to check for redis and then: docker run -d -p 6379:6379 --name aspnetrun-redis redis
+9.  To check the logs of any image: docker logs -f aspnetrun-redis
+10. docker exec -it aspnetrun-redis /bin/bash....where it is interactive terminal
+11. After that, we are able to run redis commands. 
+    a.  redis-cli
+    b.  ping - PONG
+    c.  set key value
+    d.  get key...."value"
+    e.  set name steve
+    f.  get name...."steve"
+12. Inside Business logic or Service Layer - It processes the data taken from DAL into the Project. So, the data coming from the user will go to the BLL and after      that data is transferred to DAL.
+13. Project Folder Structure:
+    a.  Entities Folder - storing the Redis Entities
+    b.  Data Folder-which will be the data Context class
+    c.  Repositories - where we will be applying Business Logic
+    d.  Controller - Exposing APIs to external systems
+14.       
+
 
 
 
