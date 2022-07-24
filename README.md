@@ -64,7 +64,8 @@ https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f
     "CollectionName": "Products"
   },
 32. Create a Data Layer by creating Data folder and then create an Interface ICatalogContext and its definition class CatalogContext.cs class. Also create a CatalogContextSeed.cs class
-33. Create a Business Layer in the form of Repositories folder and inject ICatalogContext into ProductRepository class which is implementing IProductRepository
+33. Create a Business Layer in the form of Repositories folder and inject ICatalogContext into ProductRepository class which is implementing IProductRepository.
+    In Startup.cs, add the Interfaces & classes of Data & Repository layers
 34. Develop Presentation Layer/API Layer by Creating CatalogController.
 35. Now the API is ready so we need to update the package by running the following command: Update-Package -ProjectName Catalog.API
 
@@ -171,7 +172,24 @@ Service 2: Basket.API
     b.  Data Folder-which will be the data Context class
     c.  Repositories - where we will be applying Business Logic
     d.  Controller - Exposing APIs to external systems
-14.       
+14. Create Entities folder and add a new class called ShoppingCart.cs which will have username and ShoppingListItem as the properties. 
+15. For ShoppingListItem,create a new class and include all the properties of the Shopping Items
+16. In ShoppingCart, add another method for Total Price.
+17. In Package Manager Console-Select Basket.API....cmd-Install-Package Microsoft.Extensions.Caching.StackExchangeRedis
+18. Update-Package -ProjectName Basket.API
+19. In appsettings.json, add the connection string:
+    "CacheSettings": {
+    "ConnectionString": "localhost:6379"
+  }
+20. In Startup.cs, add the following code to ensure interaction with Redis:
+    services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetValue<string>("CacheSettings.ConnectionString");
+            });
+10. Create Repositories folder and add an Interface and its definition class.
+11. Now create BasketController.cs file and inject IBasketRepository. Also add IBasketRepository in Startup.cs
+12. Now check whether Redis image is running, Right click on Solution and type: docker ps
+13.             
 
 
 
