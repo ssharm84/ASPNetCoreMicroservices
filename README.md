@@ -237,6 +237,14 @@ Service 3: Discount.API
 28.	Update-Package -ProjectName Discount.API
 29.	Create Repositories folder->IDiscountRepository.cs and then DiscountRepository.cs and write CRUD functions in it.
 30.	Add connection string in appsettings.json
+31.	Now create DiscountController class.
+32.	Add the Repositories in Startup.cs
+33.	Containerize Discount Microservices with PostgresDb
+    	a.	Right click on Discount.API and select Add->Container Orchestrator Support->Docker Compose->Linux
+    	b.	It will result in creation of dockerfile and will update docker-compose with discount.api
+    	c.	Update dockerfile, docker-compose.yml and docker-compose.override.yml for Discount.API,discountdb
+	d.	In docker-compose.override.yml, update discount.api with postgres server connection
+	
 
 
 
