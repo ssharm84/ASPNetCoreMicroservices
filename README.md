@@ -189,8 +189,54 @@ Service 2: Basket.API
 10. Create Repositories folder and add an Interface and its definition class.
 11. Now create BasketController.cs file and inject IBasketRepository. Also add IBasketRepository in Startup.cs
 12. Now check whether Redis image is running, Right click on Solution and type: docker ps
-13.             
 
+Service 3: Discount.API
+1.	Create a folder Discount under Services
+2.	Add a new ASP.Net Core Web API project with the name Doscount.API. Make sure that the location is correct.
+3.	.Net 5.0, Authentication Type: None, Uncheck Configure for Https
+4.	Right click on Discount.API->Properties->Debug and change Profile to Discount.API and Launch: Project and Application URL: http://localhost:5002
+5.	Set Discount.API as startup page and run it.
+6.	Click on docker-compose.yml and add the following code under basketdbin the services section:
+	discountdb:
+	  image: postgres
+7.	Get into docker-compose.override.yml and add a section for dockerdb....This override file is for adding the configurations of all the databases and services
+8.	Come back to docker-compose.yml and in the volumes section add:
+	volumes:
+	  mongo_data:
+	  portainer_data:
+	  postgres_data:
+9.	Now we need to add pgadmin4 image which is the management tool of postgresql into our application.
+10.	In docker-compose.yml, add a section below discountdb:
+	pgadmin:
+	  image: dpage/pgadmin4
+11.	In volumes add- pgadmin_data:	
+12.	In docker-compose.override.yml, add the environment variable & configuration for pgadmin
+13.	Right click docker-compose and Open in terminal
+14.	docker-compose up command: docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+15.	In this way the docker images of postgresql and pgadmin will be installed
+16. 	docker ps........will show the running containers on the local machine
+17.	If there is some issue or any of the image is not installed, get into portainer.io using localhost:9000 and credentials->admin|admin1234	
+18.	In Containers section you will see all the images that are running and can check if any of the service is not running by clicking the Container and check 	the Logs
+19.	Open localhost:5050 for verifying if pgadmin is working fine....Look for the credentials in docker-compose.override.yml file
+20.	Create a new Server called DiscountServer
+21.	Inside Connection->Host name = discountdb and keep every other settings same. Username=admin,pwd=admin1234...verify in in docker-compose.override.yml file
+22.	Inside database you will now see DiscountDb database.Inside Schemas, you can see Tables.
+23.	Now we need to create Coupon table..Click Tools->Query Tool
+	Create Table Coupon(
+		ID SERIAL PRIMARY KEY NOT NULL,
+		ProductName VARCHAR(24) NOT NULL,
+		Description TEXT,
+		Amount INT
+	);
+24.	To insert Data...Right click coupon, View/Edit Data..to see the data in the table.
+25. 	Insert queries:
+	Insert into Coupon(ProductName,Description,Amount) Values ('IPhone X','IPhone Discount',150);
+	Insert into Coupon(ProductName,Description,Amount) Values ('Samsung 10','Samsung Discount',100);
+26.	Right click on Discount.API and add a new folder named Entities and add the following properties-Id,ProductName,Description,Amount
+27.	Open package manager console and type: Install-Package Npgsql & Install-Package Dapper
+28.	Update-Package -ProjectName Discount.API
+29.	Create Repositories folder->IDiscountRepository.cs and then DiscountRepository.cs and write CRUD functions in it.
+30.	Add connection string in appsettings.json
 
 
 
