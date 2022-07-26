@@ -244,6 +244,14 @@ Service 3: Discount.API
     	b.	It will result in creation of dockerfile and will update docker-compose with discount.api
     	c.	Update dockerfile, docker-compose.yml and docker-compose.override.yml for Discount.API,discountdb
 	d.	In docker-compose.override.yml, update discount.api with postgres server connection
+34.	Now for migrating PostgreSQL database when Discount Microservices starts, go to Program.cs and in Main(), add the below code
+	a.	var host = CreateHostBuilder(args).Build();
+		host.MigrateDatabase<Program>();
+		host.Run();
+	b.	Remove the other code in Main()
+35.	Now we need to create an extension method named MigrateDatabase. For that create a folder called Extensions and add a class file-HostExtension.cs
+36.	Over here we will be performing Retry operation but an alternate for this is to use Polly
+36.		
 	
 
 
