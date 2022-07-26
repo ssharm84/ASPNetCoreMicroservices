@@ -252,13 +252,17 @@ Service 3: Discount.API
 35.	Now we need to create an extension method named MigrateDatabase. For that create a folder called Extensions and add a class file-HostExtension.cs
 36.	Over here we will be performing Retry operation but an alternate for this is to use Polly
 36.	Add a new folder-Extensions and add a class HostExtensions.cs and Install-Package Polly
+37. In Main() of Program.cs, add the folloving code:
+  var host = CreateHostBuilder(args).Build();
+            host.MigrateDatabase<Program>();
+            host.Run();
 
 Discount.gRPC
 1.  gRPC is a synchronous backend microservice-to-microservice communication and is implemented where performance is critical
 2.  Right click on Discount folder->Add a new project->Search with gRPC and create ASP.Net Core gRPC Service, Project Name-Discount.Grpc
 3.  In the folder structure, Protos folder has the gRPC service
 4.  We are going to create a new proto file for exposing discount to Basket Microservices.
-5.  Services folder performs the gRPC connection. In greet.proto, it is the definition of. GreetService provides abstraction of methods to proto files.
+5.  Services folder performs the gRPC connection. This folder is equivalent to Controller folder. In greet.proto, it is the definition of. GreetService provides abstraction of methods to proto files.
 6.  gRPC uses Http2 protocol for exposing services.
 7.  proto files use Protobuf compiler to convert code into C#
 8.  Right click the project to generate C# class from proto file. Click Show All files. Go to obj->Debug->net5.0->Protos->Greet.cs
@@ -268,7 +272,13 @@ Discount.gRPC
 12. In PMC, Update-Package -ProjectName Discount.Grpc
 13. Copy Entities folder from Discount.API and paste it in Discount.Grpc folder
 14. Copy Repositories folder & paste in Grpc project
-15. Copy Extensions folder & paste in Grpc project 
+15. Copy Extensions folder & paste in Grpc project
+16. Copy appsettings connection string for connecting to database
+17. Also, in Startup.cs, add IDiscountRepository.cs & DiscountRepository.cs 
+18. In Main() of Program.cs, add the folloving code:
+  var host = CreateHostBuilder(args).Build();
+            host.MigrateDatabase<Program>();
+            host.Run();
 	
 
 
