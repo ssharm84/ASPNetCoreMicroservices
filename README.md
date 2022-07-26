@@ -251,7 +251,24 @@ Service 3: Discount.API
 	b.	Remove the other code in Main()
 35.	Now we need to create an extension method named MigrateDatabase. For that create a folder called Extensions and add a class file-HostExtension.cs
 36.	Over here we will be performing Retry operation but an alternate for this is to use Polly
-36.		
+36.	Add a new folder-Extensions and add a class HostExtensions.cs and Install-Package Polly
+
+Discount.gRPC
+1.  gRPC is a synchronous backend microservice-to-microservice communication and is implemented where performance is critical
+2.  Right click on Discount folder->Add a new project->Search with gRPC and create ASP.Net Core gRPC Service, Project Name-Discount.Grpc
+3.  In the folder structure, Protos folder has the gRPC service
+4.  We are going to create a new proto file for exposing discount to Basket Microservices.
+5.  Services folder performs the gRPC connection. In greet.proto, it is the definition of. GreetService provides abstraction of methods to proto files.
+6.  gRPC uses Http2 protocol for exposing services.
+7.  proto files use Protobuf compiler to convert code into C#
+8.  Right click the project to generate C# class from proto file. Click Show All files. Go to obj->Debug->net5.0->Protos->Greet.cs
+9.  Right click on project->Debug->Profile=Discount.Grpc, launch=Project and change the port number to 5003 and remove https
+10. Set as startup project and run the application. It will not open any browser since it is running on Http2 protocol
+11. Install Dapper & NpgSql packages from Nuget or copy the references from Discount.API project
+12. In PMC, Update-Package -ProjectName Discount.Grpc
+13. Copy Entities folder from Discount.API and paste it in Discount.Grpc folder
+14. Copy Repositories folder & paste in Grpc project
+15. Copy Extensions folder & paste in Grpc project 
 	
 
 
