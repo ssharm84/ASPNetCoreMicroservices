@@ -15,7 +15,7 @@ https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f
 9.  Run the first Microservice by selecting Catalog.API in the run button instead of IIS Express
 10. Download Docker Desktop and go to hub.docker.com and search for mongo.......https://hub.docker.com/_/mongo
 11. Right click on your solution and open Terminal and check if Docker is running...docker ps
-12. docker login --username=ss84
+12. TLS Handshake Timeout issue...docker login --username=ss84 --password=India@123
 13. docker pull mongo
 14. docker run -d -p 27017:27017 --name shopping-mongo mongo......Here shopping-mongo database is created in port number 27017 from mongo image
 15. Check if the image is running using...docker ps
@@ -192,11 +192,11 @@ Service 2: Basket.API
 
 Service 3: Discount.API
 1.	Create a folder Discount under Services
-2.	Add a new ASP.Net Core Web API project with the name Doscount.API. Make sure that the location is correct.
+2.	Add a new ASP.Net Core Web API project with the name Discount.API. Make sure that the location is correct.
 3.	.Net 5.0, Authentication Type: None, Uncheck Configure for Https
 4.	Right click on Discount.API->Properties->Debug and change Profile to Discount.API and Launch: Project and Application URL: http://localhost:5002
 5.	Set Discount.API as startup page and run it.
-6.	Click on docker-compose.yml and add the following code under basketdbin the services section:
+6.	Click on docker-compose.yml and add the following code under basketdb in the services section:
 	discountdb:
 	  image: postgres
 7.	Get into docker-compose.override.yml and add a section for dockerdb....This override file is for adding the configurations of all the databases and services
@@ -232,7 +232,7 @@ Service 3: Discount.API
 25. 	Insert queries:
 	Insert into Coupon(ProductName,Description,Amount) Values ('IPhone X','IPhone Discount',150);
 	Insert into Coupon(ProductName,Description,Amount) Values ('Samsung 10','Samsung Discount',100);
-26.	Right click on Discount.API and add a new folder named Entities and add the following properties-Id,ProductName,Description,Amount
+26.	Right click on Discount.API and add a new folder named Entities and add a class-Coupon.cs & add the following properties-Id,ProductName,Description,Amount
 27.	Open package manager console and type: Install-Package Npgsql & Install-Package Dapper
 28.	Update-Package -ProjectName Discount.API
 29.	Create Repositories folder->IDiscountRepository.cs and then DiscountRepository.cs and write CRUD functions in it.
