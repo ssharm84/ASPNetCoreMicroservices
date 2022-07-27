@@ -269,7 +269,7 @@ Discount.gRPC
 9.  Right click on project->Debug->Profile=Discount.Grpc, launch=Project and change the port number to 5003 and remove https
 10. Set as startup project and run the application. It will not open any browser since it is running on Http2 protocol
 11. Install Dapper & NpgSql packages from Nuget or copy the references from Discount.API project
-12. In PMC, Update-Package -ProjectName Discount.Grpc
+12. In Package Manager Console, Update-Package -ProjectName Discount.Grpc
 13. Copy Entities folder from Discount.API and paste it in Discount.Grpc folder
 14. Copy Repositories folder & paste in Grpc project
 15. Copy Extensions folder & paste in Grpc project
@@ -279,6 +279,60 @@ Discount.gRPC
   var host = CreateHostBuilder(args).Build();
             host.MigrateDatabase<Program>();
             host.Run();
+19. So here we are concentrating on how to create gRPC service in order to consume from Basket.API
+20. Let's test now. So, right click docker-console->Open in Terminal->docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+21. Right click Discount.Grpc & set as Startup project.
+22. Now in order to expose the endpoints, we need to create Services and protos. These Services are representing in API as Controller
+23. First, delete greet.proto and GreeterService.cs file.
+24. In Startup.cs, comment out the endpoint.
+25. Right click Protos->Add New Item, Protocol Buffer File -> discount.proto and click Add button:
+	syntax = "proto3";.....This one is saying that we are using protobuf version as proto3 
+	option csharp_namespace = "Discount.Grpc.Protos";
+	
+	service DiscountProtoService{..........................This is a Grpc Service
+		rpc GetDiscount (GetDiscountRequest) returns (CouponModel);
+		rpc CreateDiscount (CreateDiscountRequest) returns (CouponModel);
+		rpc UpdateDiscount (UpdateDiscountRequest) returns (CouponModel);
+		rpc DeleteDiscount (DeleteDiscountRequest) returns (DeleteDiscountResponse);
+	}
+	
+	message GetDiscountRequest {
+		string productName = 1;
+	}
+	
+	message CouponModel {
+		int32 id = 1;
+		string productName = 2;
+		string description = 3;
+		int32 amount = 4;
+	}
+	
+	message CreateDiscountRequest {
+		CouponModel coupon = 1;
+	}
+	
+	message UpdateDiscountRequest{
+		CouponModel coupon = 1;
+	}
+
+  message DeleteDiscountRequest {
+    string productName = 1;
+  }
+	
+	message DeleteDiscountResponse{
+		bool success = 1; 
+	}
+
+26. Now we are going to generate proto service from discount.proto file
+27. Right click on discount.proto and select Properties, change Build Action = Protobuf compiler, gRPC Sub classes=Server only since we are going to create gRPC server for exposing Discount Services      
+28. Add DiscountService.cs class under Services folder and inject IDiscountRepository and ILogger. 
+29. Press enter and click on the down arrow dropdown icon on the left and select Generate Constructor
+30. Now type override and press space and you will see all the methods that are in the proto file.
+31. GetDiscount method where remove the default code and write the code.
+32. In Startup.cs, uncomment the endpoints and write DiscountService.
+33. Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
+34. Create a new folder called Mapper and create a class DiscountProfile.cs to create Mapping for Coupon & CouponModel
+35. Now go back to DiscountService and inject IMapper and write all the endpoints       
 	
 
 
