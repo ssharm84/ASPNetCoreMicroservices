@@ -279,6 +279,48 @@ Discount.gRPC
   var host = CreateHostBuilder(args).Build();
             host.MigrateDatabase<Program>();
             host.Run();
+19. So here we are concentrating on how to create gRPC service in order to consume from Basket.API
+20. Let's test now. So, right click docker-console->Open in Terminal->docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+21. Right click Discount.Grpc & set as Startup project.
+22. Now in order to expose the endpoints, we need to create Services and protos. These Services are representing in API as Controller
+23. First, delete greet.proto and GreeterService.cs file.
+24. In Startup.cs, comment out the endpoint.
+25. Right click Protos->Add New Item, Protocol Buffer File -> dicount.proto and click Add button:
+	syntax = "proto3";.....This one is saying that we are using protobuf version as proto3 
+	option csharp_namespace = "Discount.Grpc.Protos";
+	
+	service DiscountProtoService{..........................This is a Grpc Service
+		rpc GetDiscount (GetDiscountRequest) returns (CouponModel);
+		rpc CreateDiscount (CreateDiscountRequest) returns (CouponModel);
+		rpc UpdateDiscount (UpdateDiscountRequest) returns (CouponModel);
+		rpc DeleteDiscount (DeleteDiscountRequest) returns (DeleteDiscountRequest);
+	}
+	
+	message GetDiscountRequest {
+		string productName = 1;
+	}
+	
+	message CouponModel {
+		int32 id = 1;
+		string productName = 2;
+		string description = 3;
+		int32 amount = 4;
+	}
+	
+	message CreateDiscountRequest {
+		CouponModel coupon = 1;
+	}
+	
+	message UpdateDiscountRequest{
+		CouponModel coupon = 1;
+	}
+	
+	message DeleteDiscountRequest{
+		bool success = 1; 
+	}
+
+26. Now we are going to generate proto service from discount.proto file
+27. Right click on discount.proto and select Properties, change Build Action = Protobuf compiler, gRPC Sub classes=Server only since we are going to create gRPC server for exposing Discount Services
 	
 
 
