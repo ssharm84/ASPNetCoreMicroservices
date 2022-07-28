@@ -258,7 +258,7 @@ Service 3: Discount.API
             host.Run();
 
 Discount.gRPC
-1.  gRPC is a synchronous backend microservice-to-microservice communication and is implemented where performance is critical
+1.  Google Remote Procedure Call(Grpc) is a synchronous backend microservice-to-microservice communication and is implemented where performance is critical
 2.  Right click on Discount folder->Add a new project->Search with gRPC and create ASP.Net Core gRPC Service, Project Name-Discount.Grpc
 3.  In the folder structure, Protos folder has the gRPC service
 4.  We are going to create a new proto file for exposing discount to Basket Microservices.
@@ -331,8 +331,67 @@ Discount.gRPC
 31. GetDiscount method where remove the default code and write the code.
 32. In Startup.cs, uncomment the endpoints and write DiscountService.
 33. Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
+  a.  AutoMapper - It is an object to object mapper i.e. it maps an object of one type to another type.  
 34. Create a new folder called Mapper and create a class DiscountProfile.cs to create Mapping for Coupon & CouponModel
-35. Now go back to DiscountService and inject IMapper and write all the endpoints       
+  a.  This class will implement Profile class from AutoMapper and will use CreateMap method to map Coupon from Entities with CouponModel from proto class
+  public class DiscountProfile:Profile
+    {
+        public DiscountProfile()
+        {
+            CreateMap<Coupon, CouponModel>().ReverseMap();
+        }
+    }
+35. Now go back to DiscountService and inject IMapper and write all the endpoints.
+
+Section 6: Consuming Discount Grpc Service from Basket Microservice when adding Cart Item into Shopping Cart to calculate Final Price
+1.  Open Basket.API project, open BasketController->UpdateBasket method and there we need to communicate with Discount.Grpc and calculate latest prices into Shopping cart.
+2.  So, now Basket.API will be the client of Discount.Grpc
+3.  Right click Basket.API>Add->Connected Service->In Service Reference click Add a Service Reference->Select gRPC->Next->Browse Discount.proto file->Type of class to be generated = Client since we are going to consume this gRPC method->Finish
+4.  Double click Basket.API project & you will see a new Item Group = Protobuf
+5.  You will also find Protos folder with discount.proto file. Right click on it & you will see Client only as gRPC sub classes
+6.  Now, build the project. Next step is to consume gRPC service from Basket.API microservices when adding cart-item into the Shopping Cart to calculate final price of the product into the Cart item.
+7.  Right click Basket.API->Add a new folder:GrpcService and add a new class DiscountGrpcService.cs & inject DiscountProtoService.DiscountProtoServiceClient object.
+8.  Since it is a client application so we are injecting DiscountProtoService and not inheriting.
+9.  Create a constructor. In the GetDiscount method we make Grpc call with discountRequest object.
+10. Now we need to consume this service in our Basket.API Controller. So inject this service in the controller, add it in the constructor.
+11. Go to UpdateBasket method in Controller and for getting the discount of each item, write a foreach loop and perform call to Grpc GetDiscount method with the productName
+12. After this we will deduct the final price with the coupon Amount.
+13. Now in order to register DiscountGrpc client and DiscountGrpc services into Startup class:
+    // Grpc Configuration
+            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>
+                        (o => o.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
+            services.AddScoped<DiscountGrpcService>();
+14. In appsettings.json, add GrpcSettings configuration:
+  "GrpcSettings": {
+    "DiscountUrl":  "http://localhost:5003"
+  }
+15.  Port number can be verified by right clicking on Discount.Grpc and select Properties
+16. We are putting in the localhost ports. However once we containerize them then we will override the ports in docker-compose.override.yml configuration.
+17. Right click on Solution->Properties->Startup Project->Select Multiple Startup Projects and select action of Basket.API & DiscountGrpc as Start and Apply.
+18. Run the application and put the breakpoint in UpdateBasket Task & pass the following json input in http://localhost:5001/api/v1/Basket:
+    {
+    "UserName": "Steve",
+    "Items": [
+    {
+    "Quantity": 2,
+    "Color": "Red",
+    "Price": 500,
+    "ProductId": "60210c2a1556459e153f0555",
+    "ProductName": "Samsung 10"
+    },
+    {
+    "Quantity": 1,
+    "Color": "Blue",
+    "Price": 400,
+    "ProductId": "60220c3a1556459e153f0555",
+    "ProductName": "IPhone X"
+    }
+]
+}
+
+19. You will see that in the output body the price is adjusted with discount.
+
+
 	
 
 
