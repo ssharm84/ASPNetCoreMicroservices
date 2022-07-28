@@ -390,6 +390,15 @@ Section 6: Consuming Discount Grpc Service from Basket Microservice when adding 
 }
 
 19. You will see that in the output body the price is adjusted with discount.
+20. Now we need to create containerized image of Discount.Grpc
+21. Right click on project->Add->Docker Orchestrator Support
+22. In docker-compose.override, add section for discount.grpc
+23. Also, remember that we added grpc connection string in basket.api appsettings.json. So, add in this file too.
+24. Now we need to rebuild the docker images, so we will go with --build, otherwise for updating, we go with -d
+25. Right click docker-compose, Open in Terminal
+26. docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build.....This will build all the docker images again
+27. Get into postgresdb by logging into localhost:5050..Add Server->Server=DiscountServer, Host name = discountdb
+28. Portainer..localhost:9000....admin|admin1234567 
 
 
 	
