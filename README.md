@@ -398,7 +398,10 @@ Section 6: Consuming Discount Grpc Service from Basket Microservice when adding 
 25. Right click docker-compose, Open in Terminal
 26. docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build.....This will build all the docker images again
 27. Get into postgresdb by logging into localhost:5050..Add Server->Server=DiscountServer, Host name = discountdb
-28. Portainer..localhost:9000....admin|admin1234567 
+28. Portainer..localhost:9000....admin|admin1234567
+
+Ordering API:
+1. 
 
 
 	
