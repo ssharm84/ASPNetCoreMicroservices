@@ -407,6 +407,12 @@ Ordering API:
 	![image](https://user-images.githubusercontent.com/67266176/181707626-746df92e-ac9a-4134-8421-764e19bd81df.png)
 
 
+1.  Here we will have a DDD design pattern and CQRS where Application->CQRS->Sql Server
+2.  DIP-Introducing Repository between Business Logic layer and DAL
+3.  Separation Of Concerns - Elements should be unique and not to share their responsibilities with others.
+4.  Domain Driven Design - 
+5.  CQRS - Command Query Reading,Writing and Updating Procedures in different db's
+6.  
 
 
 	
