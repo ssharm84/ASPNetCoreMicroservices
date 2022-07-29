@@ -412,7 +412,8 @@ Ordering API:
 3.  Separation Of Concerns - Elements should be unique and not to share their responsibilities with others.
 4.  Domain Driven Design - 
 5.  CQRS - Command Query Reading,Writing and Updating Procedures in different db's
-6.  
+![image](https://user-images.githubusercontent.com/67266176/181725201-e232e777-64a3-461d-8081-bfebb70ba869.png)
+
 
 
 	
