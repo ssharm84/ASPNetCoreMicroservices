@@ -401,7 +401,12 @@ Section 6: Consuming Discount Grpc Service from Basket Microservice when adding 
 28. Portainer..localhost:9000....admin|admin1234567
 
 Ordering API:
-1. 
+	Architecture:
+	![image](https://user-images.githubusercontent.com/67266176/181707490-9b3431ea-db5c-42d0-a23e-0a42f00ed498.png)
+
+	![image](https://user-images.githubusercontent.com/67266176/181707626-746df92e-ac9a-4134-8421-764e19bd81df.png)
+
+
 
 
 	
