@@ -449,6 +449,37 @@ Infrastructure - Repositories
   ![image](https://user-images.githubusercontent.com/67266176/182024807-7f5bc8e4-dc40-49af-971b-cbeb83a303f1.png)
   ![image](https://user-images.githubusercontent.com/67266176/182024880-76e2546c-5f3e-40a6-acf0-93db91a56ff8.png)
 
+21. CQRS with Mediatr Design Pattern in Features:
+  a.  Create a folder called Orders in Features.Inside Orders, create 2 folders-Commands & Queries
+  b.  Queries folder is representing the retrieving operation and Commands folder is representing the CRUD operations
+  c.  Let's start with Queries, create a folder-GetOrdersList and add a class in this folder-GetOrdersListQuery.cs
+  d.  This will be a request class for our query object so it will be implementing IRequest which comes from MediatR package.
+  e.  Install-Package MediatR.Extensions.Microsoft.DependencyInjection
+  f.  This IRequest will expect to get a list of Orders DTO which we will name as OrdersVM.
+  g.  In this class we will have a property UserName and the same will be initialized in the constructor.
+  h.  We will create another class GetOrdersListQueryHandler.cs. This class will be triggerred from MediatR when the request comes and it will implement IRequestHandler.
+  i.  IRequestHandler comprises of Request and Response. Request comes from GetOrdersListQuery class and response from List<OrdersVm>.
+  j.  Double click IRequestHandler and click implement interface. Create a class-OrdersVm.cs under GetOrdersList folder which will comprise of all the entities that are there in Order.cs
+  k.  Get back to GetOrdersListQueryHandler class and inject IOrderRepository from Contracts.
+  l.  Also inject IMapper to map Order entity to my DTO(OrdersVm).
+  m.  orderList variable will get the data from the repository method. Now we need to map source(orderList) and target(OrdersVm).
+  n.  Also in MappingProfile class under Mappings folder, we need to specify the mapping between Order class from Entities folder & OrdersVm from the Features.
+  o.  Now over to Commands folder, which will perform the customer record of saving the order and sending email to the customer.
+  p.  Create a folder-CheckoutOrder and add a class-CheckoutOrderCommand.cs. Here we will implement IRequest from Mediatr with return type as int for newly created Order Id.
+  q.   Copy and paste all the entities from Order.cs in Entities. So user will provide all these details and Order Id will be generated for the same.
+  r.  Now create a new class for Handler, CheckoutOrderCommandHandler which will implement IRequestHandler which will accept request as CheckoutOrderCommand and output the OrderId as int.
+  s.  Double click IRequestHandler and click implement interface which will result in Handle method. Here we will inject IOrderRepository,IMapper and IEmailService(to send email) from Infrastructure and also ILogger and then generate constructor.
+  t.  So here I need to inject OrderRepository for inserting record,Automapper for mapping,EmailService for sending email and Logger for logging.
+  u.  We first have orderEntity which maps our request as source and Order Entity as destination
+  v.  We need to create a new Order so call IOrderRepository AddAsync and pass orderEntity. This will create the order record into SQL server db. Call logger for successful creation of Order.
+  w.  Call SendMail method which will be created later and return newOrder.Id
+  x.  Also in MappingProfile class under Mappings folder, we need to specify the mapping between Order class from Entities folder & CheckoutOrderCommand from the Features.
+  22. Now add Validator for CheckoutOrderCommand - CheckoutOrderCommandValidator.cs which will implement AbstractValidator which comes from FluentValidation package.
+  23. So in this way we will validate CheckoutOrderCommand before the execution of the Handler.
+  24. Here we will use RuleFor method of Abstract Validator class to provide validations for UserName,EmailAddress & TotalPrice in the constructor
+  25. Now we will move over to UpdateOrder
+
+
   	
 
 
