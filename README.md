@@ -445,7 +445,11 @@ Infrastructure - Repositories
   h.  Create a new Interface IOrderRepository which will implement IAsyncRepository
   i.  Create a new folder:Models and add Email.cs & EmailSettings.cs
   j.  Now we need to create a Mapper folder to map Domain object with Application object. Add a class-MappingProfile which will implement Profile class from AutoMapper
-21. 
+  k.  MediatR:
+  ![image](https://user-images.githubusercontent.com/67266176/182024807-7f5bc8e4-dc40-49af-971b-cbeb83a303f1.png)
+  ![image](https://user-images.githubusercontent.com/67266176/182024880-76e2546c-5f3e-40a6-acf0-93db91a56ff8.png)
+
+  	
 
 
 
