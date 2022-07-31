@@ -414,6 +414,39 @@ Ordering API:
 5.  CQRS - Command Query Reading,Writing and Updating Procedures in different db's
 ![image](https://user-images.githubusercontent.com/67266176/181725201-e232e777-64a3-461d-8081-bfebb70ba869.png)
 
+Application - CQRS and Mediatr
+Infrastructure - Repositories
+
+6.  Dev start
+7.  Add a folder-Ordering->Create a new ASP.Net Core WebAPI -> Ordering.API
+8.  Double click Properties folder->Profile=Ordering.API and Launch=Project and update App URL = http://localhost:5004
+9.  Now create Clean Architecture layers->Ordering.Domain,Ordering.Application,Ordering.Infrastructure and API.
+10. Right click Ordering folder->Add a new Project->Select Class Library->Ordering.Domain and select the exact location,.Net 5.0->Create
+11. Right click Ordering folder->Add a new Project->Select Class Library->Ordering.Application and select the exact location,.Net 5.0->Create
+12. Right click Ordering folder->Add a new Project->Select Class Library->Ordering.Infrastructure and select the exact location,.Net 5.0->Create
+13. Ordering.Domain & Ordering.Application layers are responsible for Business requirements without any external dependencies.
+14. So, Application & Domain layers are core layers and only Application layer reference to Domain layer & Domain layer does not have any dependency
+15. Infrastructure layer should have Application layer reference.
+16. API layer will reference both Application & Infrastructure layers.
+17. Now in order to add dependencies: Open Ordering.Application->Right click Dependencies->Add Project Reference->Select Ordering.Domain and click Ok
+18. Similarly in Ordering.Infrstructure, add reference of Ordering.Application and in Ordering.API, add ref of both Infrastructure & Application layers.
+19. Domain Layer implementation:
+  a.  Delete class1.cs and add a new folder->Common and add a new class-EntityBase.cs and add common properties
+  b.  Add another class ValueObject.cs, which will implement DDD and add the code
+  c.  Create a new folder Entities and add a class-Order.cs which will implement EntityBase class. So, all the properties of EntityBase will be in Order class. Also add further properties
+20. Application Layer with CQRS design implementation
+  a.  Application layer should cover all business use cases with abstraction.
+  b.  Here we are going to create Application Contracts, Application Features & Application Behaviors
+  c.  Create a folder: Contract. It is for Interfaces for abstracting use case implementation & Contracts for the application
+  d.  Create a folder: Features. It is for application use cases & features.It will apply CQRS design patterns for handling business use cases.
+  e.  Create a folder: Behaviours. It is reponsible for application behaviour while applying use case implementation.Eg. Validation behaviour,Logging Behaviour
+  f.  Right click on Contracts and add a new folder->Persistence which will comprise of db related contracts so we will have Generic Repository here which will be implemented in Infrastructure layer.
+  g.  Create a new Interface under Persistence, IAsyncRepository.cs which will be of type generic and will be comprising of common methods.Copy
+  h.  Create a new Interface IOrderRepository which will implement IAsyncRepository
+  i.  Create a new folder:Models and add Email.cs & EmailSettings.cs
+  j.  Now we need to create a Mapper folder to map Domain object with Application object. Add a class-MappingProfile which will implement Profile class from AutoMapper
+21. 
+
 
 
 	
