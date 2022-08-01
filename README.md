@@ -477,9 +477,20 @@ Infrastructure - Repositories
   22. Now add Validator for CheckoutOrderCommand - CheckoutOrderCommandValidator.cs which will implement AbstractValidator which comes from FluentValidation package.
   23. So in this way we will validate CheckoutOrderCommand before the execution of the Handler.
   24. Here we will use RuleFor method of Abstract Validator class to provide validations for UserName,EmailAddress & TotalPrice in the constructor
-  25. Now we will move over to UpdateOrder
-
-
+  25. So, we have completed Checkout Order Use Case.
+  26. Now we will move over to UpdateOrder Use Case. 
+  27. So, under Command folder, create a new UpdateOrder folder. Create a new class-UpdateOrderCommand.cs
+  28. This class will be same as the CheckoutOrderCommand class. So, copy the same properties from CheckoutOrderCommand class here and add a new entity Id.
+  29. This class should implement IRequest from MediatR. And we will not specify any return type here alongside IRequest
+  30. Now create a new Handler class - UpdateOrderCommandHandler which will implement IRequestHandler and it will have the request as UpdateOrderCommand. Implement this interface and we will be presented with a Handle method.There is no returning object from our command so the type of task will be Unit
+  31. In order to perform the update operations, inject IOrderRepository,IMapper and ILogger. Also in the constructor, inject these readonly members.	
+  32. Here we will be using GetByIdAsync to get the Order details and then UpdateAsync method to Update the order.Also, if there is no response from the Command, then we return Unit.Value
+  33. Last but not the least, in MappingProfile class CreateMap for mapping Order with UpdateOrderCommand.
+  34. Now for Validation, create a new class-UpdateOrderCommandValidator under UpdateOrder folder. This class will implement AbstractValidator and the entities will be in UpdateOrderCommand
+  35. This class will have the same rules that we wrote in OrderCheckout Validator class.
+  36. So, we have implemented another use case for updating Order using CQRS and Clean Architecture.
+  37. Move over to Delete Order Command Use Case:
+  	a.	Create DeleteOrderCommand class
   	
 
 
