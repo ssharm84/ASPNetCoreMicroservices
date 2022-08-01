@@ -490,7 +490,28 @@ Infrastructure - Repositories
   35. This class will have the same rules that we wrote in OrderCheckout Validator class.
   36. So, we have implemented another use case for updating Order using CQRS and Clean Architecture.
   37. Move over to Delete Order Command Use Case:
-  	a.	Create DeleteOrderCommand class
+  	a.	Create DeleteOrderCommand.cs class which will be public and will implement IRequest interface which comes from MediatR
+	b.	Here we onlyneed Id of the product so we will be having only one entity here
+	c.	According to MediatR, we should create a Handler class to implement Business Logic of deleting Order
+	d.	Create a new class-DeleteOrderCommandhandler.cs which will implement IRequestHandler class from MediatR. Request will be DeleteOrderCommand. Double 		    click on IRequestHandler to generateHandle method.
+	e.	Inject IOrderRepository, IMapper and Ilogger and generate Constructor for it.
+	f.	In Handle first we need to get the Order using GetByIdAsync and then delete that Order using DeleteAsync method. Lastly return Unit.Value if not 		returning any response.
+  38. Now let's implement custom Exceptions Handling in a separate folder called Exceptions under Ordering.Application.
+	a.	Create a new class - NotFoundException.cs which inherits ApplicationException which comes from System library. Copy from git
+	b.	Create another class-ValidationException.cs
+	c.	Open DeleteOrderCommandHandler.cs and UpdateOrderCommandHandler class and use the custom exceptions that we created NotFoundException.cs class
+  39.	Now we will be focussing on Application Behaviour:
+	a.	Now under Behaviours folder, create a new class-ValidationBehaviour and Copy n paste the code in this file from git.\
+	b.	Create another class-UnhandledExceptionBehaviour.cs and paste the code from git	
+  40.   Now we need to Register our services just like we do in Startup.cs. For that create an Extension method which has IServiceCollection parameter and will collate all the services in this extension method class.
+  	a.	Right click Ordering.Application and create a new class ApplicationServiceRegistration.cs which will be static for Extension method
+	b.	public static IServiceCollection AddApplicationServices(this IServiceCollection services);//static function with this keyword
+	c.	We will first register AutoMapper extensions. For this in PMC - Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
+	d.	Next we will register FluentValidation, For this in PMC - Install-Package FluentValidation.DependencyInjectionExtensions
+	e.	Next we will register MediatR object
+	f.	Next we will register the Pipeline behavior which comes from Behaviour section of Application layer
+	g.	In order to use these Extension methods we need to install nuget package which we have done in points c & d.
+	
   	
 
 
