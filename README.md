@@ -511,6 +511,17 @@ Infrastructure - Repositories
 	e.	Next we will register MediatR object
 	f.	Next we will register the Pipeline behavior which comes from Behaviour section of Application layer
 	g.	In order to use these Extension methods we need to install nuget package which we have done in points c & d.
+  41. Ordering.API - Create OrderController and it will inject IMediator, where Query and Command will be sent through IMediator.
+  42. Every method has IMediator.Send and this is the way of providing abstractions and segregating other layers. We only create Mediator CQRS request and send these requests to Mediator.
+  44. Ordering.Infrastructure - This layer is reponsible for Database operations and Email sending.
+  a.  Add a new folder called Persistance. Here we will be implementing database connections n so on.
+  b.  Create a new class OrderContext under Persistance folder. Add Microsoft.EntityFrameworkCore.SqlServer...version 5.0.17
+  c.  This OrderContext class will implement DbContext class which comes from Microsoft.EntityFrameworkCore
+  d.  Create a contructor and add DbContextOptions of type OrderContext and it inherits from base class
+  e.  Now create a DbSet property of type Order class from Domain layer and name it as Orders. So a table with all the properties of Order will be created with name Orders
+  f.  Type override and select SaveChangeAsync and it will create a Task.
+  Start from 101 
+
 	
   	
 
