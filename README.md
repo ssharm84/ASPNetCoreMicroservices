@@ -514,13 +514,35 @@ Infrastructure - Repositories
   41. Ordering.API - Create OrderController and it will inject IMediator, where Query and Command will be sent through IMediator.
   42. Every method has IMediator.Send and this is the way of providing abstractions and segregating other layers. We only create Mediator CQRS request and send these requests to Mediator.
   44. Ordering.Infrastructure - This layer is reponsible for Database operations and Email sending.
-  a.  Add a new folder called Persistance. Here we will be implementing database connections n so on.
+  a.  Add a new folder called Persistance. Here we will be implementing database operations n so on.
   b.  Create a new class OrderContext under Persistance folder. Add Microsoft.EntityFrameworkCore.SqlServer...version 5.0.17
   c.  This OrderContext class will implement DbContext class which comes from Microsoft.EntityFrameworkCore
   d.  Create a contructor and add DbContextOptions of type OrderContext and it inherits from base class
   e.  Now create a DbSet property of type Order class from Domain layer and name it as Orders. So a table with all the properties of Order will be created with name Orders
   f.  Type override and select SaveChangeAsync and it will create a Task.
-  Start from 101 
+  g.  In order to add/update certain data before calling SaveChangesAsync method, we will implement foreach loop in our EntityBase class.
+  h.  Now we need to create a new class OrderContextSeed where we will seed Orders table data.
+  i.  We will create a static method SeedAsync which will add some data in Orders db. This function needs to get OrderContext as the parameter and also ILogger of    	    OrderContextSeed. In this method we will seed some pair with data.
+  j.  In this method we will check if the Orders table is empty then we will feed data into it and for that we will create a function GetPreconfiguredOrders and call it in the SeedAsync method.
+  k.  Post this we will call SaveChangesAsync method which is overridden from OrderContext class. And after this log the information.
+  l.  We completed Persistance part of Ordering.Infrastructure.
+  m.  Now moving on to Repositories part of Ordering.Infrastructure.
+  n.  In the Ordering.Application layer under Contracts Persistance - we have IAsyncRepository and IorderRepository. Now we need to implement these repositories
+  o.  Create a new folder Repositories under Ordering.Infrastructure. Add a new class RepositoryBase.cs in Repositories folder
+  p.  This RepositoryBase class will be public and Generic type and it will implement IAsyncRepository which will be generic type
+  q.  Inject OrderContext object and make it protected to be used by OrderRepository and create a constructor.
+  r.  Start implementing all the methods in IAsyncRepository. Begin with GetAllAsync method and use DBContext.Set(T) method to get the Async List
+  s.  GetAsync() method where we can directly paste the predicate in Where condition and get the Async List.
+  t.  Implement all Get Functions
+  u.  Now for implementing Create Order through AddAsync method of type entity, use DBConext.Set(T).Add(entity) and after that in await, use    	 D   	DbContext.SaveChangesAsync ();
+  v.  For Update, we use DbContext.Entry(entity).State = EntityState.Modified; and then DbConect.SaveChangesAsync().
+  w.  For Delete, we use DbContext.Set<T>.Remove(entity); and then await DbContext.SaveChangesAsync();
+  x.  OrderRepository:
+      a.	Create a new class - OrderRepository.cs which will inherit from RepositoryBase<Order>...Here Order is the entity name
+      b. 	Also implement IOrderRepostory which comes from Contracts->Persistance
+      c.	Select implement Interface IOrderRepository so that we get the method - GetOrdersByUserName()
+      d.	Create a constructor by ctor and have the parameter as DbContext because we have injected Dbcontext in our RepositoryBase class which is protected so that it maybe accessible in the subclasses.
+      e.	
 
 	
   	
