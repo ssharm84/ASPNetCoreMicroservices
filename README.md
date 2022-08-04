@@ -542,7 +542,42 @@ Infrastructure - Repositories
       b. 	Also implement IOrderRepostory which comes from Contracts->Persistance
       c.	Select implement Interface IOrderRepository so that we get the method - GetOrdersByUserName()
       d.	Create a constructor by ctor and have the parameter as DbContext because we have injected Dbcontext in our RepositoryBase class which is protected so that it maybe accessible in the subclasses.
-      e.	
+  45. Ordering.Infrastructure continue: Mail Send:
+  46. In Contracts, we have implemented Persistence layer. Now moving over to Infrastructure of Contracts. Under Contracts we have 1 more Interface - IEmailService
+  47. We will use SendGrid for sending emails - https://docs.sendgrid.com/for-developers/sending-email/v3-csharp-code-example
+  48. Right click Ordering.Infrastructure->Add New Folder: Mail and add a new class: EmailService.cs
+  49. Implement IEmailService from Contracts->Infrastructure to have the method SendEmail here.
+  50. Get EmailSettings from Models and ILogger info and generate constructor
+  51. For EmailSettings, we are getting the info from Application Settings so have EmailSettings parameter as IOptions and _emailSettings = emailSettings.Value
+  52. Now in SendEmail method, we will create a client. Install package SendGrid
+  53. Copy the code n paste in this file.
+  54. Infrastructure Registration Services - Just like we registered our services in Application layer, so in the Infrastructure layer we will be implementing the same
+  55. We will have Sql Connection String in the appSettings of Ordering.API. Copy the code
+  56. Now we will register Application & Infrastructure layers into Ordering.API.
+  57. We have 2 Extension methods for Service Registration. So, now is the time to inject them into our Ordering.API. So we are going to call AddApplicationService extension method and AddInfrastructureService extension method into Startup.cs ConfigurationServices method of Ordering.API
+  58. Before that add the ConnectionStrings and EmailSettings in appsettings.json
+  59. Add - AddApplicationServices n AddInfrastructureServices in Startup.cs
+  60. Now we need to perform EFCore Migrations. So as we know that we have our DbContext(OrderContext.cs) in Persistance folder of Ordering.Infrastructure layer
+  61. First Set As Startup Project as Ordering.API. and now we need EFCore package in Ordering.API project. So open PMC and select Ordering.API
+  62. Install-Package Microsoft.EntityFrameworkCore.Tools...It is used for Code First Migration..In .Net 5, we can add package from Nuget
+  63. Now we will have to generate Migrations folder in Infrastructure layer. So open PMC and select Ordering.Infrastructure
+  64. Type...Add-Migration InitialCreate and you will see a Migrations folder created in Ordering.Infrastructure
+  65. We need to run Migrations from Ordering.API, so, just like we wrote the code in Discount.Grpc to migrate Database and for that we created MigrateDatabase extension method. In the same manner we will do it here.
+  66. Right click Ordering.API and create a folder-Extensions. Create a new class-HostExtensions.cs
+  67. Create a static method MigrateDatabase. Copy paste
+  68. Now go to Program.cs and host.MigrateDatabase<OrderContext>(); Add Copy paste
+  69. Next is to add Sql Server image from docker hub. So, Open docker-compose.yml and after discountdb, add orderdb
+  70. In docker-compose.override.yml, add orderdb configurations after discountdb
+  71. Verify for configurations from Ordering.API appsettings.json.
+  72. Right click docker-compose and Open in Terminal
+  73. Make sure to run your Docker Desktop and type: docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+  74. Now Run Ordering.API and validate all the methods
+  75. Next step is to Containerize Ordering Microservices with SqlServer using Docker Compose
+  76. Right click Ordering.API->Add->Add Orchestrate Docker Compose and Dockerfile will be created and compose files will be updated with orderingapi
+  77. In docker-compose.override.yml, update ordering.api with container-name and ConnectionStrings. Note Server is the container name i.e. orderdb and depends_on is the database name
+  78. Right click docker-compose and Open In Terminal and put:  docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+  79. Open http://localhost:8004/swagger/index.html
+
 
 	
   	
